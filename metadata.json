@@ -1,0 +1,8 @@
+{
+  "name": "ZERO - Personal AI Assistant",
+  "description": "ZERO is a fully autonomous, always-listening, OS-level AI assistant with system-control authority. Features voice interaction, vision capabilities, and simulated system control tools.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
