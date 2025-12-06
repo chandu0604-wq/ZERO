@@ -7,13 +7,6 @@ import { Message, NovaState } from './types';
 import { GeminiService } from './services/geminiService';
 import { toolsRegistry } from './services/tools';
 
-// Define window type for webkitSpeechRecognition
-declare global {
-  interface Window {
-    webkitSpeechRecognition: any;
-  }
-}
-
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -27,6 +20,7 @@ const App: React.FC = () => {
   
   const cameraRef = useRef<CameraHandle>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  // Lazy init service
   const geminiService = useRef(new GeminiService());
   
   // Speech Recognition Setup
@@ -188,7 +182,8 @@ const App: React.FC = () => {
     }
 
     if ('webkitSpeechRecognition' in window) {
-      const recognition = new window.webkitSpeechRecognition();
+      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
       recognition.continuous = false; // We use auto-restart logic for "always on" feel
       recognition.interimResults = true;
       recognition.lang = 'en-US';
@@ -293,9 +288,10 @@ const App: React.FC = () => {
   };
 
   const changeApiKey = async () => {
-    if (window.aistudio) {
+    const win = window as any;
+    if (win.aistudio) {
         try {
-            await window.aistudio.openSelectKey();
+            await win.aistudio.openSelectKey();
             setShowSettings(false);
         } catch (e) {
             console.error("Failed to open key selection", e);
